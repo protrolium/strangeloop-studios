@@ -15,6 +15,13 @@
             {* begin index list *}
             <div class=" uk-margin-large-top">
 
+                {* Pre-fetch all images to avoid N+1 queries *}
+                {if $page->name == 'artists'}
+                    {var $allImages = $pages->find("template=music-videos|concert-visuals|broadcast|virtual-reality|brands|cinema|news-item|nft, artist=" . $page->children()->implode('|', 'id'))}
+                {elseif $page->name == 'collaborators'}
+                    {var $allImages = $pages->find("template=music-videos|concert-visuals|broadcast|virtual-reality|brands|cinema|news-item|nft, collaborator=" . $page->children()->implode('|', 'id'))}
+                {/if}
+
                 {foreach $page->children() as $item}
                 
                     <div class="uk-padding-small uk-padding-remove-bottom uk-width-1-1">
@@ -27,18 +34,16 @@
 
                         {* image hover div *}
 
-                        {* get an image from one of these templates *}
+                        {* get the pre-fetched image for this item *}
                         {if $page->name == 'artists'}
-                            {var $image = $pages->find("template=music-videos|concert-visuals|broadcast|virtual-reality|brands|cinema|news-item|nft, artist=$item, limit=1")}
-                        
+                            {var $image = $allImages->find("artist=$item")->first}
                         {elseif $page->name == 'collaborators'}
-                            {var $image = $pages->find("template=music-videos|concert-visuals|broadcast|virtual-reality|brands|cinema|news-item|nft, collaborator=$item, limit=1")}
-                        
+                            {var $image = $allImages->find("collaborator=$item")->first}
                         {/if}
 
                         <div 
                             class="previewImg uk-cover-container uk-background-cover"
-                            style="background-image: url('{$image->first->featured_image->first->url}');">
+                            style="background-image: url('{$image->featured_image->first->url}');">
                                 <a href="{$item->url}" alt="">
                                     <canvas width="854" height="480"></canvas>
                                 </a>
