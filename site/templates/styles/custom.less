@@ -17,7 +17,7 @@
     --footer-gradient: linear-gradient(179deg, #ffffff, #e0e4ff, #deffe7, #f8e4ff);
     --footer-border-top: 1px solid black;
 }:root[data-theme="theme-dark"] {
-    --primary-color: #49afd9;
+    --primary-color: #7bb3d1;
     --text-color: #e3f5fc;
     --bg-color: #090d0f;
     --component-bg-color: #22343c;
@@ -58,11 +58,11 @@ body {
   }
 
 .text-light {
-    color: #fff;
+    color: #fff !important;
 }
 
 .text-light:hover {
-    color:#ffffff;
+    color:#ffffff !important;
     text-decoration: underline;
 }
 
@@ -130,6 +130,18 @@ a:hover, .uk-link:hover, .uk-link-toggle:hover .uk-link {
     color: var(--primary-color);
 }
 
+// Dark mode link styling
+:root[data-theme="theme-dark"] {
+    a, .uk-link {
+        color: #a8cce0;
+        transition: color 0.3s ease;
+    }
+    
+    a:hover, .uk-link:hover {
+        color: #c5d9e8;
+    }
+}
+
 #se-results {
     position: absolute;
     background-color: var(--bg-color);
@@ -180,7 +192,30 @@ a.noExternalSVG::after {
 #featured-image-bg.lazyLoad {
     background-image: none !important;
     background-color: var(--bg-color);
- }
+}
+
+// Add gradient overlay for better text legibility on featured image backgrounds
+#featured-image-bg {
+    position: relative;
+}
+
+#featured-image-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, transparent 100%);
+    z-index: 1;
+    pointer-events: none;
+}
+
+// Ensure h1 text appears above the gradient overlay
+#featured-image-bg h1 {
+    position: relative;
+    z-index: 2;
+}
 
 .overlay-projects {
     background: #22222245;
