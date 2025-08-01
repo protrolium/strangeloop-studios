@@ -116,6 +116,13 @@ if (searchForm) {
     }
   }
   
+  // Helper function to decode HTML entities safely
+  const decodeHtmlEntities = (text) => {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  };
+
   const renderResults = (form, data) => {
     // Check if results container exists, create it if not
     searchResults = document.getElementById('se-results');
@@ -140,7 +147,7 @@ if (searchForm) {
       const summary = document.createElement('p');
       summary.className = 'search-results__summary';
       summary.id = 'se-results-summary';
-      summary.textContent = `${data.results.length} results for "${data.query}":`;
+      summary.textContent = `${data.results.length} results for "${decodeHtmlEntities(data.query)}":`;
       searchResults.appendChild(summary);
       
       // Create results list
@@ -161,7 +168,7 @@ if (searchForm) {
         const link = document.createElement('a');
         link.className = 'search-result__link';
         link.href = item.url;
-        link.textContent = item.title;
+        link.textContent = decodeHtmlEntities(item.title);
         resultContainer.appendChild(link);
         
         // Create path display
@@ -182,7 +189,7 @@ if (searchForm) {
       // No results found
       const summary = document.createElement('p');
       summary.className = 'search-results__summary';
-      summary.textContent = `No results found for "${data.query}"`;
+      summary.textContent = `No results found for "${decodeHtmlEntities(data.query)}"`;
       searchResults.appendChild(summary);
       searchResults.removeAttribute('hidden');
     }
@@ -279,6 +286,26 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     const div = document.getElementById('se-results');
+    
+    // Hide search results when clicking outside the search form and results
+    document.addEventListener('click', (event) => {
+        const searchForm = document.getElementById('se-form');
+        const searchResults = document.getElementById('se-results');
+        const searchInput = document.querySelector('input[name="q"]');
+        
+        // Check if the click is outside both the search form and results container
+        if (searchForm && searchResults && 
+            !searchForm.contains(event.target) && 
+            !searchResults.contains(event.target)) {
+            if (searchResults && !searchResults.hasAttribute('hidden')) {
+                searchResults.setAttribute('hidden', 'true');
+                // Clear the search input field
+                if (searchInput) {
+                    searchInput.value = '';
+                }
+            }
+        }
+    });
     
     if (div) {
       div.addEventListener('click', function() {
