@@ -5,7 +5,7 @@
 // font-family: 'Silkscreen', monospace;
 
 :root[data-theme="theme-light"] {
-    --primary-color: #0072a3;
+    --primary-color: #5a8ba8;
     --text-color: #333333;
     --bg-color: #fafafa;
     --component-bg-color: #ffffff;
@@ -139,6 +139,11 @@ a:hover, .uk-link:hover, .uk-link-toggle:hover .uk-link {
     
     a:hover, .uk-link:hover {
         color: #c5d9e8;
+    }
+    
+    // Fix for related items navigation with white background
+    .related-items-nav a:hover {
+        color: #000000 !important;
     }
 }
 
